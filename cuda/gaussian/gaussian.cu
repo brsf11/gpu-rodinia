@@ -56,7 +56,7 @@ float init_time = 0, mem_alloc_time = 0, h2d_time = 0, kernel_time = 0,
       d2h_time = 0, close_time = 0, total_time = 0;
 #endif
 
-int Size;
+int Size = 16;
 float *a, *b, *finalVec;
 float *m;
 
@@ -73,7 +73,7 @@ void InitAry(float *ary, int ary_size);
 void PrintMat(float *ary, int nrow, int ncolumn);
 void PrintAry(float *ary, int ary_size);
 // void PrintDeviceProperties();
-void checkCUDAError(const char *msg);
+// void checkCUDAError(const char *msg);
 
 unsigned int totalKernelTime = 0;
 
@@ -109,67 +109,79 @@ int main(int argc, char *argv[])
 {
   printf("WG size of kernel 1 = %d, WG size of kernel 2= %d X %d\n", MAXBLOCKSIZE, BLOCK_SIZE_XY, BLOCK_SIZE_XY);
     int verbose = 0;
-    int i, j;
-    char flag;
-    if (argc < 2) {
-        printf("Usage: gaussian -f filename / -s size [-q]\n\n");
-        printf("-q (quiet) suppresses printing the matrix and result values.\n");
-        printf("-f (filename) path of input file\n");
-        printf("-s (size) size of matrix. Create matrix and rhs in this program \n");
-        printf("The first line of the file contains the dimension of the matrix, n.");
-        printf("The second line of the file is a newline.\n");
-        printf("The next n lines contain n tab separated values for the matrix.");
-        printf("The next line of the file is a newline.\n");
-        printf("The next line of the file is a 1xn vector with tab separated values.\n");
-        printf("The next line of the file is a newline. (optional)\n");
-        printf("The final line of the file is the pre-computed solution. (optional)\n");
-        printf("Example: matrix4.txt:\n");
-        printf("4\n");
-        printf("\n");
-        printf("-0.6	-0.5	0.7	0.3\n");
-        printf("-0.3	-0.9	0.3	0.7\n");
-        printf("-0.4	-0.5	-0.3	-0.8\n");	
-        printf("0.0	-0.1	0.2	0.9\n");
-        printf("\n");
-        printf("-0.85	-0.68	0.24	-0.53\n");	
-        printf("\n");
-        printf("0.7	0.0	-0.4	-0.5\n");
-        exit(0);
-    }
+    int  j;
+
+	// Hard code arguments
+    // if (argc < 2) {
+    //     printf("Usage: gaussian -f filename / -s size [-q]\n\n");
+    //     printf("-q (quiet) suppresses printing the matrix and result values.\n");
+    //     printf("-f (filename) path of input file\n");
+    //     printf("-s (size) size of matrix. Create matrix and rhs in this program \n");
+    //     printf("The first line of the file contains the dimension of the matrix, n.");
+    //     printf("The second line of the file is a newline.\n");
+    //     printf("The next n lines contain n tab separated values for the matrix.");
+    //     printf("The next line of the file is a newline.\n");
+    //     printf("The next line of the file is a 1xn vector with tab separated values.\n");
+    //     printf("The next line of the file is a newline. (optional)\n");
+    //     printf("The final line of the file is the pre-computed solution. (optional)\n");
+    //     printf("Example: matrix4.txt:\n");
+    //     printf("4\n");
+    //     printf("\n");
+    //     printf("-0.6	-0.5	0.7	0.3\n");
+    //     printf("-0.3	-0.9	0.3	0.7\n");
+    //     printf("-0.4	-0.5	-0.3	-0.8\n");	
+    //     printf("0.0	-0.1	0.2	0.9\n");
+    //     printf("\n");
+    //     printf("-0.85	-0.68	0.24	-0.53\n");	
+    //     printf("\n");
+    //     printf("0.7	0.0	-0.4	-0.5\n");
+    //     exit(0);
+    // }
     
     // PrintDeviceProperties();
     //char filename[100];
     //sprintf(filename,"matrices/matrix%d.txt",size);
 
-    for(i=1;i<argc;i++) {
-      if (argv[i][0]=='-') {// flag
-        flag = argv[i][1];
-          switch (flag) {
-            case 's': // platform
-              i++;
-              Size = atoi(argv[i]);
-	      printf("Create matrix internally in parse, size = %d \n", Size);
+    // for(i=1;i<argc;i++) {
+    //   if (argv[i][0]=='-') {// flag
+    //     flag = argv[i][1];
+    //       switch (flag) {
+    //         case 's': // platform
+    //           i++;
+    //           Size = atoi(argv[i]);
+	//       printf("Create matrix internally in parse, size = %d \n", Size);
 
-	      a = (float *) malloc(Size * Size * sizeof(float));
-	      create_matrix(a, Size);
+	//       a = (float *) malloc(Size * Size * sizeof(float));
+	//       create_matrix(a, Size);
 
-	      b = (float *) malloc(Size * sizeof(float));
-	      for (j =0; j< Size; j++)
-	    	b[j]=1.0;
+	//       b = (float *) malloc(Size * sizeof(float));
+	//       for (j =0; j< Size; j++)
+	//     	b[j]=1.0;
 
-	      m = (float *) malloc(Size * Size * sizeof(float));
-              break;
-            case 'f': // platform
-              i++;
-	      printf("Read file from %s \n", argv[i]);
-	      InitProblemOnce(argv[i]);
-              break;
-            case 'q': // quiet
-	      verbose = 0;
-              break;
-	  }
-      }
-    }
+	//       m = (float *) malloc(Size * Size * sizeof(float));
+    //           break;
+    //         case 'f': // platform
+    //           i++;
+	//       printf("Read file from %s \n", argv[i]);
+	//       InitProblemOnce(argv[i]);
+    //           break;
+    //         case 'q': // quiet
+	//       verbose = 0;
+    //           break;
+	//   }
+    //   }
+    // }
+
+	printf("Create matrix internally in parse, size = %d \n", Size);
+
+	a = (float *) malloc(Size * Size * sizeof(float));
+	create_matrix(a, Size);
+
+	b = (float *) malloc(Size * sizeof(float));
+	for (j =0; j< Size; j++)
+	b[j]=1.0;
+
+	m = (float *) malloc(Size * Size * sizeof(float));
 
     //InitProblemOnce(filename);
     InitPerRun();
@@ -390,7 +402,7 @@ void ForwardSub()
 		// cudaThreadSynchronize();
 		Fan2<<<dimGridXY,dimBlockXY>>>(m_cuda,a_cuda,b_cuda,Size,Size-t,t);
 		//cudaThreadSynchronize();
-		checkCUDAError("Fan2");
+		// checkCUDAError("Fan2");
 	}
 	// end timing kernels
 	struct timeval time_end;
@@ -486,14 +498,14 @@ void PrintAry(float *ary, int ary_size)
 	}
 	printf("\n\n");
 }
-void checkCUDAError(const char *msg)
-{
-    cudaError_t err = cudaGetLastError();
-    if( cudaSuccess != err) 
-    {
-        fprintf(stderr, "Cuda error: %s: %s.\n", msg, 
-                                  cudaGetErrorString( err) );
-        exit(EXIT_FAILURE);
-    }                         
-}
+// void checkCUDAError(const char *msg)
+// {
+//     cudaError_t err = cudaGetLastError();
+//     if( cudaSuccess != err) 
+//     {
+//         fprintf(stderr, "Cuda error: %s: %s.\n", msg, 
+//                                   cudaGetErrorString( err) );
+//         exit(EXIT_FAILURE);
+//     }                         
+// }
 
