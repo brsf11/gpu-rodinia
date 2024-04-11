@@ -89,14 +89,12 @@ b+tree.out:	./main.o \
 		./kernel/kernel_gpu_cuda_wrapper.o \
 		./kernel/kernel_gpu_cuda_wrapper_2.o \
 		./util/timer/timer.o \
-		./util/num/num.o \
-		./util/cuda/cuda.o
+		./util/num/num.o 
 	$(C_C)	./main.o \
 			./kernel/kernel_gpu_cuda_wrapper.o \
 			./kernel/kernel_gpu_cuda_wrapper_2.o \
 			./util/timer/timer.o \
 			./util/num/num.o \
-			./util/cuda/cuda.o \
 			-lm \
 			-L$(CUDA_LIB_DIR) \
 			$(CUDA_LIB)\
@@ -161,14 +159,6 @@ main.o:	./common.h \
 			-o ./util/num/num.o \
 			-O3
 
-./util/cuda/cuda.o:	./common.h \
-					./util/cuda/cuda.h \
-					./util/cuda/cuda.cu
-	$(CUD_C)	./util/cuda/cuda.cu \
-				-c \
-				-o ./util/cuda/cuda.o \
-				-O3 \
-				$(CUDA_FLAG)
 
 # ======================================================================================================================================================150
 #	END
