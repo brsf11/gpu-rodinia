@@ -1876,8 +1876,8 @@ main(	int argc,
 	arch_arg = 0;
 	int cores_arg;
 	cores_arg = 1;
-	char *input_file = "../../data/b+tree/mil.txt";
-	char *command_file = "../../data/b+tree/command.txt";
+	char *input_file = "./gpu-rodinia/data/b+tree/mil.txt";
+	char *command_file = "./gpu-rodinia//data/b+tree/command.txt";
 	char *output="output.txt";
 	FILE * pFile;
 
