@@ -87,12 +87,10 @@ CUD_C = nvcc -m64 -arch=sm_60 --cudart shared
 
 b+tree.out:	./main.o \
 		./kernel/kernel_gpu_cuda_wrapper.o \
-		./kernel/kernel_gpu_cuda_wrapper_2.o \
 		./util/timer/timer.o \
 		./util/num/num.o 
 	$(C_C)	./main.o \
 			./kernel/kernel_gpu_cuda_wrapper.o \
-			./kernel/kernel_gpu_cuda_wrapper_2.o \
 			./util/timer/timer.o \
 			./util/num/num.o \
 			-lm \
@@ -130,14 +128,6 @@ main.o:	./common.h \
 				-O3 \
 				$(CUDA_FLAG)
 
-./kernel/kernel_gpu_cuda_wrapper_2.o:	./common.h \
-										./kernel/kernel_gpu_cuda_wrapper_2.h \
-										./kernel/kernel_gpu_cuda_wrapper_2.cu
-	$(CUD_C) $(KERNEL_DIM) ./kernel/kernel_gpu_cuda_wrapper_2.cu \
-				-c \
-				-o ./kernel/kernel_gpu_cuda_wrapper_2.o \
-				-O3 \
-				$(CUDA_FLAG)
 
 # ======================================================================================================================================================150
 #	UTILITIES
