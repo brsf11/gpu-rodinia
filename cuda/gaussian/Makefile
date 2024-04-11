@@ -8,7 +8,7 @@ SRC = gaussian.cu
 EXE = gaussian
 
 release: $(SRC)
-	$(CC) $(KERNEL_DIM) $(SRC) -o $(EXE) -I$(INCLUDE) -L$(CUDA_LIB_DIR) 
+	$(CC) $(KERNEL_DIM) -m64 -arch=sm_60 --cudart shared $(SRC) -o $(EXE) -I$(INCLUDE) -L$(CUDA_LIB_DIR) 
 
 clang: $(SRC)
 	clang++ $(SRC) -o $(EXE) -I../util --cuda-gpu-arch=sm_20 \

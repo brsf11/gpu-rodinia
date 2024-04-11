@@ -72,7 +72,7 @@ void InitMat(float *ary, int nrow, int ncol);
 void InitAry(float *ary, int ary_size);
 void PrintMat(float *ary, int nrow, int ncolumn);
 void PrintAry(float *ary, int ary_size);
-void PrintDeviceProperties();
+// void PrintDeviceProperties();
 void checkCUDAError(const char *msg);
 
 unsigned int totalKernelTime = 0;
@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
         exit(0);
     }
     
-    PrintDeviceProperties();
+    // PrintDeviceProperties();
     //char filename[100];
     //sprintf(filename,"matrices/matrix%d.txt",size);
 
@@ -218,38 +218,38 @@ int main(int argc, char *argv[])
  ** PrintDeviceProperties
  **-----------------------------------------------------
  */
-void PrintDeviceProperties(){
-	cudaDeviceProp deviceProp;  
-	int nDevCount = 0;  
+// void PrintDeviceProperties(){
+// 	cudaDeviceProp deviceProp;  
+// 	int nDevCount = 0;  
 	
-	cudaGetDeviceCount( &nDevCount );  
-	printf( "Total Device found: %d", nDevCount );  
-	for (int nDeviceIdx = 0; nDeviceIdx < nDevCount; ++nDeviceIdx )  
-	{  
-	    memset( &deviceProp, 0, sizeof(deviceProp));  
-	    if( cudaSuccess == cudaGetDeviceProperties(&deviceProp, nDeviceIdx))  
-	        {
-				printf( "\nDevice Name \t\t - %s ", deviceProp.name );  
-			    printf( "\n**************************************");  
-			    printf( "\nTotal Global Memory\t\t\t - %lu KB", deviceProp.totalGlobalMem/1024 );  
-			    printf( "\nShared memory available per block \t - %lu KB", deviceProp.sharedMemPerBlock/1024 );  
-			    printf( "\nNumber of registers per thread block \t - %d", deviceProp.regsPerBlock );  
-			    printf( "\nWarp size in threads \t\t\t - %d", deviceProp.warpSize );  
-			    printf( "\nMemory Pitch \t\t\t\t - %zu bytes", deviceProp.memPitch );  
-			    printf( "\nMaximum threads per block \t\t - %d", deviceProp.maxThreadsPerBlock );  
-			    printf( "\nMaximum Thread Dimension (block) \t - %d %d %d", deviceProp.maxThreadsDim[0], deviceProp.maxThreadsDim[1], deviceProp.maxThreadsDim[2] );  
-			    printf( "\nMaximum Thread Dimension (grid) \t - %d %d %d", deviceProp.maxGridSize[0], deviceProp.maxGridSize[1], deviceProp.maxGridSize[2] );  
-			    printf( "\nTotal constant memory \t\t\t - %zu bytes", deviceProp.totalConstMem );  
-			    printf( "\nCUDA ver \t\t\t\t - %d.%d", deviceProp.major, deviceProp.minor );  
-			    printf( "\nClock rate \t\t\t\t - %d KHz", deviceProp.clockRate );  
-			    printf( "\nTexture Alignment \t\t\t - %zu bytes", deviceProp.textureAlignment );  
-			    printf( "\nDevice Overlap \t\t\t\t - %s", deviceProp. deviceOverlap?"Allowed":"Not Allowed" );  
-			    printf( "\nNumber of Multi processors \t\t - %d\n\n", deviceProp.multiProcessorCount );  
-			}  
-	    else  
-	        printf( "\n%s", cudaGetErrorString(cudaGetLastError()));  
-	}  
-}
+// 	cudaGetDeviceCount( &nDevCount );  
+// 	printf( "Total Device found: %d", nDevCount );  
+// 	for (int nDeviceIdx = 0; nDeviceIdx < nDevCount; ++nDeviceIdx )  
+// 	{  
+// 	    memset( &deviceProp, 0, sizeof(deviceProp));  
+// 	    if( cudaSuccess == cudaGetDeviceProperties(&deviceProp, nDeviceIdx))  
+// 	        {
+// 				printf( "\nDevice Name \t\t - %s ", deviceProp.name );  
+// 			    printf( "\n**************************************");  
+// 			    printf( "\nTotal Global Memory\t\t\t - %lu KB", deviceProp.totalGlobalMem/1024 );  
+// 			    printf( "\nShared memory available per block \t - %lu KB", deviceProp.sharedMemPerBlock/1024 );  
+// 			    printf( "\nNumber of registers per thread block \t - %d", deviceProp.regsPerBlock );  
+// 			    printf( "\nWarp size in threads \t\t\t - %d", deviceProp.warpSize );  
+// 			    printf( "\nMemory Pitch \t\t\t\t - %zu bytes", deviceProp.memPitch );  
+// 			    printf( "\nMaximum threads per block \t\t - %d", deviceProp.maxThreadsPerBlock );  
+// 			    printf( "\nMaximum Thread Dimension (block) \t - %d %d %d", deviceProp.maxThreadsDim[0], deviceProp.maxThreadsDim[1], deviceProp.maxThreadsDim[2] );  
+// 			    printf( "\nMaximum Thread Dimension (grid) \t - %d %d %d", deviceProp.maxGridSize[0], deviceProp.maxGridSize[1], deviceProp.maxGridSize[2] );  
+// 			    printf( "\nTotal constant memory \t\t\t - %zu bytes", deviceProp.totalConstMem );  
+// 			    printf( "\nCUDA ver \t\t\t\t - %d.%d", deviceProp.major, deviceProp.minor );  
+// 			    printf( "\nClock rate \t\t\t\t - %d KHz", deviceProp.clockRate );  
+// 			    printf( "\nTexture Alignment \t\t\t - %zu bytes", deviceProp.textureAlignment );  
+// 			    printf( "\nDevice Overlap \t\t\t\t - %s", deviceProp. deviceOverlap?"Allowed":"Not Allowed" );  
+// 			    printf( "\nNumber of Multi processors \t\t - %d\n\n", deviceProp.multiProcessorCount );  
+// 			}  
+// 	    else  
+// 	        printf( "\n%s", cudaGetErrorString(cudaGetLastError()));  
+// 	}  
+// }
  
  
 /*------------------------------------------------------
@@ -387,9 +387,9 @@ void ForwardSub()
     gettimeofday(&time_start, NULL);
 	for (t=0; t<(Size-1); t++) {
 		Fan1<<<dimGrid,dimBlock>>>(m_cuda,a_cuda,Size,t);
-		cudaThreadSynchronize();
+		// cudaThreadSynchronize();
 		Fan2<<<dimGridXY,dimBlockXY>>>(m_cuda,a_cuda,b_cuda,Size,Size-t,t);
-		cudaThreadSynchronize();
+		//cudaThreadSynchronize();
 		checkCUDAError("Fan2");
 	}
 	// end timing kernels
