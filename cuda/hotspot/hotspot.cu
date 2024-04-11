@@ -31,7 +31,8 @@ float chip_width = 0.016;
 /* ambient temperature, assuming no package at all	*/
 float amb_temp = 80.0;
 
-void run(int argc, char** argv);
+//void run(int argc, char** argv);
+void run();
 
 /* define timer macros */
 #define pin_stats_reset()   startCycle()
@@ -249,7 +250,7 @@ int compute_tran_temp(float *MatrixPower,float *MatrixTemp[2], int col, int row,
 	}
         return dst;
 }
-
+/*
 void usage(int argc, char **argv)
 {
 	fprintf(stderr, "Usage: %s <grid_rows/grid_cols> <pyramid_height> <sim_time> <temp_file> <power_file> <output_file>\n", argv[0]);
@@ -260,38 +261,49 @@ void usage(int argc, char **argv)
 	fprintf(stderr, "\t<power_file> - name of the file containing the dissipated power values of each cell\n");
 	fprintf(stderr, "\t<output_file> - name of the output file\n");
 	exit(1);
-}
+}*/
 
-int main(int argc, char** argv)
+//int main(int argc, char** argv)
+int main()
 {
   printf("WG size of kernel = %d X %d\n", BLOCK_SIZE, BLOCK_SIZE);
 
-    run(argc,argv);
+    //run(argc,argv);
+    run();
 
     return EXIT_SUCCESS;
 }
 
-void run(int argc, char** argv)
+//void run(int argc, char** argv)
+void run()
 {
     int size;
-    int grid_rows,grid_cols;
+    //int grid_rows;
+    int grid_rows = 512;
+    int grid_cols = 512;
     float *FilesavingTemp,*FilesavingPower,*MatrixOut; 
-    char *tfile, *pfile, *ofile;
+    char *tfile, *pfile;
+    // *ofile;
     
-    int total_iterations = 60;
-    int pyramid_height = 1; // number of iterations
+    //int total_iterations = 60;
+    int total_iterations = 2;
+    //int pyramid_height = 1; // number of iterations
+    int pyramid_height = 2; // number of iterations
 	
-	if (argc != 7)
+	/*if (argc != 7)
 		usage(argc, argv);
 	if((grid_rows = atoi(argv[1]))<=0||
 	   (grid_cols = atoi(argv[1]))<=0||
        (pyramid_height = atoi(argv[2]))<=0||
        (total_iterations = atoi(argv[3]))<=0)
-		usage(argc, argv);
+		usage(argc, argv);*/
 		
-	tfile=argv[4];
-    pfile=argv[5];
-    ofile=argv[6];
+	//tfile=argv[4];
+	tfile="~/test/gpu-rodinia/data/hotspot/temp_512";
+         
+    //pfile=argv[5];
+    pfile="~/test/gpu-rodinia/data/hotspot/power_512";
+    //ofile=argv[6];
 	
     size=grid_rows*grid_cols;
 
@@ -330,7 +342,7 @@ void run(int argc, char** argv)
 	printf("Ending simulation\n");
     cudaMemcpy(MatrixOut, MatrixTemp[ret], sizeof(float)*size, cudaMemcpyDeviceToHost);
 
-    writeoutput(MatrixOut,grid_rows, grid_cols, ofile);
+    //writeoutput(MatrixOut,grid_rows, grid_cols, ofile);
 
     cudaFree(MatrixPower);
     cudaFree(MatrixTemp[0]);
