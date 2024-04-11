@@ -1863,8 +1863,8 @@ main(	int argc,
 	// ------------------------------------------------------------60
 
 	int device = 0;
-	cudaSetDevice(device);
-	printf("Selecting device %d\n", device);
+	//cudaSetDevice(device);
+	//printf("Selecting device %d\n", device);
 
 	// ------------------------------------------------------------60
 	// read inputs
@@ -1876,42 +1876,42 @@ main(	int argc,
 	arch_arg = 0;
 	int cores_arg;
 	cores_arg = 1;
-	char *input_file = NULL;
-	char *command_file = NULL;
+	char *input_file = "../../data/b+tree/mil.txt";
+	char *command_file = "../../data/b+tree/command.txt";
 	char *output="output.txt";
 	FILE * pFile;
 
 
-	// go through arguments
-	for(cur_arg=1; cur_arg<argc; cur_arg++){
-	  // check if -file
-	  if(strcmp(argv[cur_arg], "file")==0){
-	    // check if value provided
-	    if(argc>=cur_arg+1){
-	      input_file = argv[cur_arg+1];
-	      cur_arg = cur_arg+1;
-	      // value is not a number
-	    }
-	    // value not provided
-	    else{
-	      printf("ERROR: Missing value to -file parameter\n");
-	      return -1;
-	    }
-	  }
-	  else if(strcmp(argv[cur_arg], "command")==0){
-	    // check if value provided
-	    if(argc>=cur_arg+1){
-	      command_file = argv[cur_arg+1];
-	      cur_arg = cur_arg+1;
-	      // value is not a number
-	    }
-	    // value not provided
-	    else{
-	      printf("ERROR: Missing value to command parameter\n");
-	      return -1;
-	    }
-	  }
-	}
+	// // go through arguments
+	// for(cur_arg=1; cur_arg<argc; cur_arg++){
+	//   // check if -file
+	//   if(strcmp(argv[cur_arg], "file")==0){
+	//     // check if value provided
+	//     if(argc>=cur_arg+1){
+	//       input_file = argv[cur_arg+1];
+	//       cur_arg = cur_arg+1;
+	//       // value is not a number
+	//     }
+	//     // value not provided
+	//     else{
+	//       printf("ERROR: Missing value to -file parameter\n");
+	//       return -1;
+	//     }
+	//   }
+	//   else if(strcmp(argv[cur_arg], "command")==0){
+	//     // check if value provided
+	//     if(argc>=cur_arg+1){
+	//       command_file = argv[cur_arg+1];
+	//       cur_arg = cur_arg+1;
+	//       // value is not a number
+	//     }
+	//     // value not provided
+	//     else{
+	//       printf("ERROR: Missing value to command parameter\n");
+	//       return -1;
+	//     }
+	//   }
+	// }
 	// Print configuration
 	  if((input_file==NULL)||(command_file==NULL))
 	    printf("Usage: ./b+tree file input_file command command_list\n");
