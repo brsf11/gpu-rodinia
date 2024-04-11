@@ -1,5 +1,6 @@
 CC = gcc
 NVCC = nvcc
+CXXFLAGS=-m64 -arch=sm_60
 
 DEFS += \
 		-DGPU_TIMER \
@@ -42,7 +43,8 @@ clang: $(SRC)
 		-L/usr/local/cuda/lib64 -lcudart_static -ldl -lrt -pthread -DTIMING
 
 $(EXECUTABLE) : $(OBJS)
-	$(NVCC) $(NVCCFLAGS) -o $@  $?
+# $(NVCC) $(NVCCFLAGS) $(CXXFLAGS) -O3 --cudart shared -o $@  $?
+	$(NVCC) $(CXXFLAGS) -O3 --cudart shared -o $@  $?
 
 clean:
 	rm -f $(EXECUTABLE) $(OBJS) *.linkinfo
