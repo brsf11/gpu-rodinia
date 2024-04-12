@@ -42,16 +42,16 @@ double elapsed_time(long long start_time, long long end_time) {
 }
 
 /*****************************
- * CHECK_ERROR
+ * 
  * Checks for CUDA errors and prints them to the screen to help with
  * debugging of CUDA related programming
  *****************************/
-void check_error(cudaError e) {
-    if (e != cudaSuccess) {
-        printf("\nCUDA error: %s\n", cudaGetErrorString(e));
-        exit(1);
-    }
-}
+// void (cudaError e) {
+//     if (e != cudaSuccess) {
+//         printf("\nCUDA error: %s\n", cudaGetErrorString(e));
+//         exit(1);
+//     }
+// }
 
 void cuda_print_double_array(double *array_GPU, size_t size) {
     //allocate temporary array for printing
@@ -687,21 +687,21 @@ void particleFilter(unsigned char * I, int IszX, int IszY, int Nfr, int * seed, 
     double* partial_sums;
 
     //CUDA memory allocation
-    check_error(cudaMalloc((void **) &arrayX_GPU, sizeof (double) *Nparticles));
-    check_error(cudaMalloc((void **) &arrayY_GPU, sizeof (double) *Nparticles));
-    check_error(cudaMalloc((void **) &xj_GPU, sizeof (double) *Nparticles));
-    check_error(cudaMalloc((void **) &yj_GPU, sizeof (double) *Nparticles));
-    check_error(cudaMalloc((void **) &CDF_GPU, sizeof (double) *Nparticles));
-    check_error(cudaMalloc((void **) &u_GPU, sizeof (double) *Nparticles));
-    check_error(cudaMalloc((void **) &likelihood_GPU, sizeof (double) *Nparticles));
+    cudaMalloc((void **) &arrayX_GPU, sizeof (double) *Nparticles);
+    cudaMalloc((void **) &arrayY_GPU, sizeof (double) *Nparticles);
+    cudaMalloc((void **) &xj_GPU, sizeof (double) *Nparticles);
+    cudaMalloc((void **) &yj_GPU, sizeof (double) *Nparticles);
+    cudaMalloc((void **) &CDF_GPU, sizeof (double) *Nparticles);
+    cudaMalloc((void **) &u_GPU, sizeof (double) *Nparticles);
+    cudaMalloc((void **) &likelihood_GPU, sizeof (double) *Nparticles);
     //set likelihood to zero
-    check_error(cudaMemset((void *) likelihood_GPU, 0, sizeof (double) *Nparticles));
-    check_error(cudaMalloc((void **) &weights_GPU, sizeof (double) *Nparticles));
-    check_error(cudaMalloc((void **) &I_GPU, sizeof (unsigned char) *IszX * IszY * Nfr));
-    check_error(cudaMalloc((void **) &objxy_GPU, sizeof (int) *2 * countOnes));
-    check_error(cudaMalloc((void **) &ind_GPU, sizeof (int) *countOnes * Nparticles));
-    check_error(cudaMalloc((void **) &seed_GPU, sizeof (int) *Nparticles));
-    check_error(cudaMalloc((void **) &partial_sums, sizeof (double) *Nparticles));
+    cudaMemset((void *) likelihood_GPU, 0, sizeof (double) *Nparticles);
+    cudaMalloc((void **) &weights_GPU, sizeof (double) *Nparticles);
+    cudaMalloc((void **) &I_GPU, sizeof (unsigned char) *IszX * IszY * Nfr);
+    cudaMalloc((void **) &objxy_GPU, sizeof (int) *2 * countOnes);
+    cudaMalloc((void **) &ind_GPU, sizeof (int) *countOnes * Nparticles);
+    cudaMalloc((void **) &seed_GPU, sizeof (int) *Nparticles);
+    cudaMalloc((void **) &partial_sums, sizeof (double) *Nparticles);
 
 
     //Donnie - this loop is different because in this kernel, arrayX and arrayY
@@ -718,12 +718,12 @@ void particleFilter(unsigned char * I, int IszX, int IszY, int Nfr, int * seed, 
     int indX, indY;
     //start send
     long long send_start = get_time();
-    check_error(cudaMemcpy(I_GPU, I, sizeof (unsigned char) *IszX * IszY*Nfr, cudaMemcpyHostToDevice));
-    check_error(cudaMemcpy(objxy_GPU, objxy, sizeof (int) *2 * countOnes, cudaMemcpyHostToDevice));
-    check_error(cudaMemcpy(weights_GPU, weights, sizeof (double) *Nparticles, cudaMemcpyHostToDevice));
-    check_error(cudaMemcpy(xj_GPU, xj, sizeof (double) *Nparticles, cudaMemcpyHostToDevice));
-    check_error(cudaMemcpy(yj_GPU, yj, sizeof (double) *Nparticles, cudaMemcpyHostToDevice));
-    check_error(cudaMemcpy(seed_GPU, seed, sizeof (int) *Nparticles, cudaMemcpyHostToDevice));
+    cudaMemcpy(I_GPU, I, sizeof (unsigned char) *IszX * IszY*Nfr, cudaMemcpyHostToDevice);
+    cudaMemcpy(objxy_GPU, objxy, sizeof (int) *2 * countOnes, cudaMemcpyHostToDevice);
+    cudaMemcpy(weights_GPU, weights, sizeof (double) *Nparticles, cudaMemcpyHostToDevice);
+    cudaMemcpy(xj_GPU, xj, sizeof (double) *Nparticles, cudaMemcpyHostToDevice);
+    cudaMemcpy(yj_GPU, yj, sizeof (double) *Nparticles, cudaMemcpyHostToDevice);
+    cudaMemcpy(seed_GPU, seed, sizeof (int) *Nparticles, cudaMemcpyHostToDevice);
     long long send_end = get_time();
     printf("TIME TO SEND TO GPU: %f\n", elapsed_time(send_start, send_end));
     int num_blocks = ceil((double) Nparticles / (double) threads_per_block);
@@ -742,7 +742,6 @@ void particleFilter(unsigned char * I, int IszX, int IszY, int Nfr, int * seed, 
     }//end loop
 
     //block till kernels are finished
-    cudaThreadSynchronize();
     long long back_time = get_time();
 
     cudaFree(xj_GPU);
@@ -757,11 +756,11 @@ void particleFilter(unsigned char * I, int IszX, int IszY, int Nfr, int * seed, 
     cudaFree(partial_sums);
 
     long long free_time = get_time();
-    check_error(cudaMemcpy(arrayX, arrayX_GPU, sizeof (double) *Nparticles, cudaMemcpyDeviceToHost));
+    cudaMemcpy(arrayX, arrayX_GPU, sizeof (double) *Nparticles, cudaMemcpyDeviceToHost);
     long long arrayX_time = get_time();
-    check_error(cudaMemcpy(arrayY, arrayY_GPU, sizeof (double) *Nparticles, cudaMemcpyDeviceToHost));
+    cudaMemcpy(arrayY, arrayY_GPU, sizeof (double) *Nparticles, cudaMemcpyDeviceToHost);
     long long arrayY_time = get_time();
-    check_error(cudaMemcpy(weights, weights_GPU, sizeof (double) *Nparticles, cudaMemcpyDeviceToHost));
+    cudaMemcpy(weights, weights_GPU, sizeof (double) *Nparticles, cudaMemcpyDeviceToHost);
     long long back_end_time = get_time();
     printf("GPU Execution: %lf\n", elapsed_time(send_end, back_time));
     printf("FREE TIME: %lf\n", elapsed_time(back_time, free_time));
@@ -801,24 +800,26 @@ void particleFilter(unsigned char * I, int IszX, int IszY, int Nfr, int * seed, 
 int main(int argc, char * argv[]) {
 
     char* usage = "double.out -x <dimX> -y <dimY> -z <Nfr> -np <Nparticles>";
-    //check number of arguments
-    if (argc != 9) {
-        printf("%s\n", usage);
-        return 0;
-    }
-    //check args deliminators
-    if (strcmp(argv[1], "-x") || strcmp(argv[3], "-y") || strcmp(argv[5], "-z") || strcmp(argv[7], "-np")) {
-        printf("%s\n", usage);
-        return 0;
-    }
+    // //check number of arguments
+    // if (argc != 9) {
+    //     printf("%s\n", usage);
+    //     return 0;
+    // }
+    // //check args deliminators
+    // if (strcmp(argv[1], "-x") || strcmp(argv[3], "-y") || strcmp(argv[5], "-z") || strcmp(argv[7], "-np")) {
+    //     printf("%s\n", usage);
+    //     return 0;
+    // }
 
     int IszX, IszY, Nfr, Nparticles;
 
     //converting a string to a integer
-    if (sscanf(argv[2], "%d", &IszX) == EOF) {
-        printf("ERROR: dimX input is incorrect");
-        return 0;
-    }
+    // if (sscanf(argv[2], "%d", &IszX) == EOF) {
+    //     printf("ERROR: dimX input is incorrect");
+    //     return 0;
+    // }
+
+    IszX = 128;
 
     if (IszX <= 0) {
         printf("dimX must be > 0\n");
@@ -826,10 +827,12 @@ int main(int argc, char * argv[]) {
     }
 
     //converting a string to a integer
-    if (sscanf(argv[4], "%d", &IszY) == EOF) {
-        printf("ERROR: dimY input is incorrect");
-        return 0;
-    }
+    // if (sscanf(argv[4], "%d", &IszY) == EOF) {
+    //     printf("ERROR: dimY input is incorrect");
+    //     return 0;
+    // }
+
+    IszY = 128;
 
     if (IszY <= 0) {
         printf("dimY must be > 0\n");
@@ -837,10 +840,12 @@ int main(int argc, char * argv[]) {
     }
 
     //converting a string to a integer
-    if (sscanf(argv[6], "%d", &Nfr) == EOF) {
-        printf("ERROR: Number of frames input is incorrect");
-        return 0;
-    }
+    // if (sscanf(argv[6], "%d", &Nfr) == EOF) {
+    //     printf("ERROR: Number of frames input is incorrect");
+    //     return 0;
+    // }
+
+    Nfr = 10;
 
     if (Nfr <= 0) {
         printf("number of frames must be > 0\n");
@@ -848,10 +853,12 @@ int main(int argc, char * argv[]) {
     }
 
     //converting a string to a integer
-    if (sscanf(argv[8], "%d", &Nparticles) == EOF) {
-        printf("ERROR: Number of particles input is incorrect");
-        return 0;
-    }
+    // if (sscanf(argv[8], "%d", &Nparticles) == EOF) {
+    //     printf("ERROR: Number of particles input is incorrect");
+    //     return 0;
+    // }
+
+    Nparticles = 1000;
 
     if (Nparticles <= 0) {
         printf("Number of particles must be > 0\n");
