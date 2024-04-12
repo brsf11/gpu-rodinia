@@ -34,11 +34,12 @@ char *argv[];
 	
   int seed;
 
-  if (argc!=2){
-  fprintf(stderr, "usage: backprop <num of input elements>\n");
-  exit(0);
-  }
-  layer_size = atoi(argv[1]);
+  // if (argc!=2){
+  // fprintf(stderr, "usage: backprop <num of input elements>\n");
+  // exit(0);
+  // }
+  // layer_size = atoi(argv[1]);
+  layer_size = 2048;
   if (layer_size%16!=0){
   fprintf(stderr, "The number of input points must be divided by 16\n");
   exit(0);
