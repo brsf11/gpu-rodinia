@@ -77,12 +77,13 @@ void BFSGraph( int argc, char** argv)
 {
 
     char *input_f;
-	if(argc!=2){
-	Usage(argc, argv);
-	exit(0);
-	}
+	// if(argc!=2){
+	// Usage(argc, argv);
+	// exit(0);
+	// }
 
-	input_f = argv[1];
+	// input_f = argv[1];
+	input_f = "./gpu-rodinia/data/bfs/graph1k.txt";
 	printf("Reading File\n");
 	//Read in Graph from a file
 	fp = fopen(input_f,"r");
@@ -227,7 +228,7 @@ void BFSGraph( int argc, char** argv)
 		// check if kernel execution generated and error
 
 #ifdef  TIMING
-		cudaDeviceSynchronize();
+		//cudaDeviceSynchronize();
 		gettimeofday(&tv_kernel_end, NULL);
 		tvsub(&tv_kernel_end, &tv_h2d_end, &tv);
 		kernel_time += tv.tv_sec * 1000.0 + (float) tv.tv_usec / 1000.0;
